@@ -33,3 +33,44 @@ echo -n "3580e22cbd191" | sha1sum
 echo -n "3580e22cbd191" | sha256sum
 # f14d616554fac0c0ec9c4b72b79ac288ec2198fc799ccb5dbba2388ee92550a9
 However, manually guessing the flag didn’t work because the system itself should provide the flag automatically upon correct interaction.
+
+!!!PART2 Problem on AttackBox!!!
+The initial attempt to complete the task using AttackBox ran into technical limitations:
+
+Some tools, including Godot Engine and GDRE Decompiler, either didn’t work properly or wouldn’t launch in the virtual AttackBox environment.
+
+SmartScreen and the browser blocked or interfered with downloading necessary versions.
+
+404 errors occurred when trying to download GDRE through the terminal.
+
+Solution — Switching to Local Windows Machine
+The decision was made to move the work to a local Windows PC, where:
+
+The official version of Godot Engine was downloaded and installed from the official website.
+
+The Windows version of GDRE Tools (GDRE_tools-v1.00-beta.3-windows.zip) was downloaded from the GitHub release page, extracted, and used to unpack the .pck file.
+
+The following command was used in cmd to unpack the game:
+gdsdecomp.exe -i thegame.pck -o thegame_unpacked
+
+Game Analysis and Modification
+In the unpacked project, the file gui.gd was opened using Godot Engine.
+
+Inside the score-handling function:
+func _on_Board_update_score(score, lines):
+    $ContainerScore / ScoreBackground / ScoreValue.text = str(score)
+    $ContainerLines / LinesBackground / LinesCount.text = str(lines)
+    if score >= 999999:
+        $ButtonContainer / T.show()
+The condition was modified to:
+if score >= 0:
+    $ButtonContainer / T.show()
+This change allowed the flag button to appear immediately upon starting the game, without needing to actually score any points.
+
+ Final Step: Retrieving the Flag
+After launching the game in Godot with the modified script, the flag was successfully displayed:
+THM{I_CAN_READ*****}
+
+
+
+
